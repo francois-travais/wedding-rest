@@ -54,6 +54,7 @@ def retrieve_if_exists(req, field, result):
 @app.route('/rest/accommodations', methods=['GET'])
 @cross_origin()
 def get_accommodations():
+    app.logger.debug("Accommodations: access")
     accommodations = []
     for a in db.accommodations.find():
         accommodations.append(unmongoised(a))
@@ -64,7 +65,9 @@ def get_accommodations():
 @cross_origin()
 def post_contact():
     if not request.json or not 'name' in request.json or not 'message' in request.json:
+        app.logger.warning("Contact: Missing name or message in contact form")
         abort(400)
+    app.logger.debug("Contact: access")
     contact = {
         'name': request.json['name'],
         'message': request.json['message'],
@@ -81,9 +84,12 @@ def post_contact():
 @cross_origin()
 def post_reply():
     if not request.json or not 'name' in request.json or not 'adultNb' in request.json:
+        app.logger.warning("Reply: Missing name or adult number")
         abort(400)
     if not isinstance(request.json['adultNb'], (int, long)):
+        app.logger.warning("Reply: Adult nb is not a number")
         abort(400)
+    app.logger.debug("Reply: access")
     reply = {
         'name': request.json['name'],
         'adultNb': request.json['adultNb'],
@@ -93,6 +99,7 @@ def post_reply():
     reply = retrieve_if_exists(request, 'comment', reply)
     reply = retrieve_if_exists(request, 'childNb', reply)
     if not isinstance(reply['childNb'], (int, long)):
+        app.logger.warning("Reply: Child nb is not a number")
         abort(400)
     replies = db.replies
     reply_id = replies.insert(reply)
