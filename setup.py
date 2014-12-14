@@ -1,6 +1,4 @@
 # -*- coding: utf8 -*-
-__author__ = 'francois-travais'
-
 from setuptools import setup
 
 setup(
@@ -17,14 +15,17 @@ setup(
     # Packages
     packages=["wedding_rest"],
 
+    package_data={
+        # If any package contains *.ini files, include them:
+        '': ['*.ini']
+    },
+    include_package_data=True,
+
     # Details
     url="https://github.com/francois-travais/wedding-rest.git",
 
-    #
-    license="LICENSE",
+    license="GNU GPL v2",
     description="REST services of my wedding website",
-
-    long_description=open("README.md").read(),
 
     # Dependent packages (distributions)
     install_requires=[
@@ -32,4 +33,5 @@ setup(
         "pymongo",
         "Flask-Cors",
     ],
+    zip_safe=False
 )
