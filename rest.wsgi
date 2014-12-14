@@ -1,1 +1,1 @@
-from wedding-rest import app as application
+from wedding_rest import app as application
