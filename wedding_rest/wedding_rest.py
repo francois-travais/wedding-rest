@@ -5,9 +5,10 @@ from flask import Flask, jsonify, request, abort
 from pymongo import MongoClient
 from flask_cors import CORS, cross_origin
 import ConfigParser
+import os
 
 configParser = ConfigParser.SafeConfigParser()
-configParser.read('config.ini')
+configParser.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini'))
 
 
 def getDatabase(configParser):
