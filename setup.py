@@ -14,11 +14,6 @@ setup(
 
     # Packages
     packages=["wedding_rest"],
-
-    package_data={
-        # If any package contains *.ini files, include them:
-        '': ['*.ini']
-    },
     include_package_data=True,
 
     # Details
@@ -33,5 +28,5 @@ setup(
         "pymongo",
         "Flask-Cors",
     ],
-    zip_safe=True
+    zip_safe=False
 )
