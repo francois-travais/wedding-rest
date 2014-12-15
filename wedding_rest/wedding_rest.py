@@ -39,8 +39,6 @@ app = Flask(__name__)
 cors = CORS()
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-app.logger.wanr(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini'))
-
 db = getMongoClient(configParser)
 
 
