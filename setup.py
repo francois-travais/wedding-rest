@@ -33,5 +33,5 @@ setup(
         "pymongo",
         "Flask-Cors",
     ],
-    zip_safe=False
+    zip_safe=True
 )
