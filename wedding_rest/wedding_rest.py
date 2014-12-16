@@ -52,7 +52,7 @@ def retrieve_if_exists(req, field, result):
     return result
 
 
-@app.route('/rest/accommodations', methods=['GET'])
+@app.route('/v1/accommodations', methods=['GET'])
 @cross_origin()
 def get_accommodations():
     app.logger.debug("Accommodations: access")
@@ -62,10 +62,10 @@ def get_accommodations():
     return jsonify({'accommodations': accommodations})
 
 
-@app.route('/rest/contact', methods=['POST'])
+@app.route('/v1/contact', methods=['POST'])
 @cross_origin()
 def post_contact():
-    if not request.json or not 'name' in request.json or not 'message' in request.json:
+    if not request.json or 'name' not in request.json or 'message' not in request.json:
         app.logger.warning("Contact: Missing name or message in contact form")
         abort(400)
     app.logger.debug("Contact: access")
@@ -81,10 +81,10 @@ def post_contact():
     return jsonify({'contact': unmongoised(result)}), 201
 
 
-@app.route('/rest/reply', methods=['POST'])
+@app.route('/v1/reply', methods=['POST'])
 @cross_origin()
 def post_reply():
-    if not request.json or not 'name' in request.json or not 'adultNb' in request.json:
+    if not request.json or 'name' not in request.json or 'adultNb' not in request.json:
         app.logger.warning("Reply: Missing name or adult number")
         abort(400)
     if not isinstance(request.json['adultNb'], (int, long)):
