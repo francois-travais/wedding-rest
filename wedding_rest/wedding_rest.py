@@ -71,6 +71,16 @@ def get_accommodations():
     return jsonify({'accommodations': accommodations})
 
 
+@app.route('/v1/gifts', methods=['GET'])
+@cross_origin()
+def get_gifts():
+    app.logger.debug("Gifts: access")
+    gifts = []
+    for g in db.gifts.find():
+        gifts.append(unmongoised(g))
+    return jsonify({'gifts': gifts})
+
+
 @app.route('/v1/contact', methods=['POST'])
 @cross_origin()
 def post_contact():
