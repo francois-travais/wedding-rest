@@ -56,7 +56,7 @@ def validate_password(password):
     result = db.passwords.find_one({"password": password})
     if result is not None:
         app.logger.info('Password of user %s found' % result['user'])
-        return True
+        return result['user']
     app.logger.warn('Password %s not found' % password)
     return False
 
@@ -90,7 +90,6 @@ def get_gifts():
 @cross_origin()
 def get_gift(gift_id):
     app.logger.debug("Gift: access")
-    gifts = []
     gift = db.gifts.find_one({"id": gift_id})
     tmp = unmongoised(gift)
     gift = tmp.copy()
@@ -103,7 +102,11 @@ def get_gift(gift_id):
 @app.route('/v1/booking', methods=['POST'])
 @cross_origin()
 def book_gift():
-    if not request.json or 'password' not in request.json or not validate_password(request.json['password']):
+    if not request.json or 'password' not in request.json:
+        app.logger.warning('Attempt to post booking form with wrong password')
+        return forbidden('wrong password')
+    pass_name = validate_password(request.json['password'])
+    if pass_name is None or not pass_name:
         app.logger.warning('Attempt to post booking form with wrong password')
         return forbidden('wrong password')
     if 'name' not in request.json:
@@ -114,6 +117,7 @@ def book_gift():
         abort(400)
     app.logger.debug("Booking: access")
     booking = {
+        'pass_name': pass_name,
         'name': request.json['name'],
         'value': request.json['booked'],
         'date': datetime.datetime.utcnow()
@@ -137,7 +141,11 @@ def book_gift():
 @app.route('/v1/contact', methods=['POST'])
 @cross_origin()
 def post_contact():
-    if not request.json or 'password' not in request.json or not validate_password(request.json['password']):
+    if not request.json or 'password' not in request.json:
+        app.logger.warning('Attempt to post contact form with wrong password')
+        return forbidden('wrong password')
+    pass_name = validate_password(request.json['password'])
+    if pass_name is None or not pass_name:
         app.logger.warning('Attempt to post contact form with wrong password')
         return forbidden('wrong password')
     if 'name' not in request.json or 'message' not in request.json:
@@ -145,6 +153,7 @@ def post_contact():
         abort(400)
     app.logger.debug("Contact: access")
     contact = {
+        'pass_name': pass_name,
         'name': request.json['name'],
         'message': request.json['message'],
         'date': datetime.datetime.utcnow()
@@ -159,7 +168,11 @@ def post_contact():
 @app.route('/v1/reply', methods=['POST'])
 @cross_origin()
 def post_reply():
-    if not request.json or 'password' not in request.json or not validate_password(request.json['password']):
+    if not request.json or 'password' not in request.json:
+        app.logger.warning('Attempt to post reply form with wrong password')
+        return forbidden('wrong password')
+    pass_name = validate_password(request.json['password'])
+    if pass_name is None or not pass_name:
         app.logger.warning('Attempt to post reply form with wrong password')
         return forbidden('wrong password')
     if 'name' not in request.json or 'adultNb' not in request.json:
@@ -170,6 +183,7 @@ def post_reply():
         abort(400)
     app.logger.debug("Reply: access")
     reply = {
+        'pass_name': pass_name,
         'name': request.json['name'],
         'adultNb': request.json['adultNb'],
         'date': datetime.datetime.utcnow()
